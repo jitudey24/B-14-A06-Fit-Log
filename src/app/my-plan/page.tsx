@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { LibraryContext } from "@/context/LibraryContext";
 import Image from "next/image";
 import Link from "next/link";
@@ -14,104 +14,128 @@ const MyPlan = () => {
   // Completed workout IDs
   const [completedIds, setCompletedIds] = useState<number[]>([]);
 
-  // Loading state (initial fetch simulation)
+  // Loading state
   const [isLoading, setIsLoading] = useState(true);
 
+  // Default sorting = Duration
+  const [sortBy, setSortBy] = useState<
+    "duration" | "calories" | "rating"
+  >("duration");
+
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 500);
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 500);
+
     return () => clearTimeout(timer);
   }, []);
 
-  // Sort By
-  // Default = Duration
-  const [sortBy, setSortBy] = useState<"duration" | "calories" | "rating">(
-    "duration",
-  );
-
+  // Clean data
   const cleanPlan = plan.filter(Boolean);
   const cleanSaved = saved.filter(Boolean);
 
   // Current tab data
   const currentList = activeTab === "plan" ? cleanPlan : cleanSaved;
 
-  // SORT CURRENT LIST
+  // SORT
+  const sortedList = useMemo(() => {
+    const list = [...currentList];
 
-  const sortedList = [...currentList].sort((a, b) => {
     if (sortBy === "duration") {
-      return Number(a.duration || 0) - Number(b.duration || 0);
+      return list.sort(
+        (a, b) =>
+          Number(a.duration || 0) -
+          Number(b.duration || 0),
+      );
     }
 
     if (sortBy === "calories") {
-      return Number(a.caloriesBurned || 0) - Number(b.caloriesBurned || 0);
+      return list.sort(
+        (a, b) =>
+          Number(a.caloriesBurned || 0) -
+          Number(b.caloriesBurned || 0),
+      );
     }
 
     if (sortBy === "rating") {
-      return Number(a.rating || 0) - Number(b.rating || 0);
+      return list.sort(
+        (a, b) =>
+          Number(a.rating || 0) -
+          Number(b.rating || 0),
+      );
     }
 
-    return 0;
-  });
+    return list;
+  }, [currentList, sortBy]);
 
   // STATS
-  // Always based on TODAY'S PLAN, updates live as items are added/removed
-
   const totalExercises = cleanPlan.length;
 
   const totalMinutes = cleanPlan.reduce(
-    (total, workout) => total + Number(workout?.duration || 0),
+    (total, workout) =>
+      total + Number(workout?.duration || 0),
     0,
   );
 
   const totalCalories = cleanPlan.reduce(
-    (total, workout) => total + Number(workout?.caloriesBurned || 0),
+    (total, workout) =>
+      total + Number(workout?.caloriesBurned || 0),
     0,
   );
 
   // MARK AS DONE / UNDONE
-
   const handleMarkAsDone = (id: number) => {
     setCompletedIds((prev) => {
       if (prev.includes(id)) {
         toast.info("Workout marked as undone");
+
         return prev.filter((item) => item !== id);
       }
 
       toast.success("Workout marked as done");
+
       return [...prev, id];
     });
   };
 
   // REMOVE FROM TODAY'S PLAN
+  const handleRemoveFromPlan = (
+    id: number,
+    name: string,
+  ) => {
+    setPlan((prev) =>
+      prev.filter((workout) => workout.id !== id),
+    );
 
-  const handleRemoveFromPlan = (id: number, name: string) => {
-    const confirmed = window.confirm(`Remove "${name}" from today's plan?`);
-    if (!confirmed) return;
+    setCompletedIds((prev) =>
+      prev.filter((item) => item !== id),
+    );
 
-    setPlan((prev) => prev.filter((workout) => workout.id !== id));
-
-    // Remove completed status too
-    setCompletedIds((prev) => prev.filter((item) => item !== id));
-
-    toast.info("Workout removed from today's plan");
+    toast.success(
+      `${name} removed from today's plan`,
+    );
   };
 
   // REMOVE FROM SAVED
+  const handleRemoveFromSaved = (
+    id: number,
+    name: string,
+  ) => {
+    setSaved((prev) =>
+      prev.filter((workout) => workout.id !== id),
+    );
 
-  const handleRemoveFromSaved = (id: number, name: string) => {
-    const confirmed = window.confirm(`Remove "${name}" from saved?`);
-    if (!confirmed) return;
-
-    setSaved((prev) => prev.filter((workout) => workout.id !== id));
-
-    toast.info("Workout removed from saved");
+    toast.success(`${name} removed from saved`);
   };
 
   return (
     <main className="container mx-auto max-w-6xl px-4 py-10">
-      {/*  HEADER  */}
 
+      {/* HEADER */}
       <div>
-        <h1 className="text-5xl font-black text-white">MY PLAN</h1>
+        <h1 className="text-5xl font-black text-white">
+          MY PLAN
+        </h1>
 
         <p className="mt-3 text-zinc-500">
           Cap of five lifts for today. Finish them, then load more.
@@ -119,8 +143,8 @@ const MyPlan = () => {
       </div>
 
       {/* STATS */}
-
       <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
+
         <div className="rounded-2xl border border-white/10 bg-[#111518] p-6">
           <p className="text-sm font-bold uppercase text-zinc-500">
             Exercises
@@ -132,7 +156,9 @@ const MyPlan = () => {
         </div>
 
         <div className="rounded-2xl border border-white/10 bg-[#111518] p-6">
-          <p className="text-sm font-bold uppercase text-zinc-500">Minutes</p>
+          <p className="text-sm font-bold uppercase text-zinc-500">
+            Minutes
+          </p>
 
           <h2 className="mt-3 text-4xl font-black text-[#C2F800]">
             {totalMinutes}
@@ -148,12 +174,18 @@ const MyPlan = () => {
             {totalCalories}
           </h2>
         </div>
+
       </div>
 
-      {/* TABS + SORT BY (same row) */}
-
+      {/* TABS + SORT */}
       <div className="mt-10 flex flex-wrap items-center justify-between gap-4">
-        <div className="flex gap-3" role="tablist" aria-label="Plan tabs">
+
+        {/* TABS */}
+        <div
+          className="flex gap-3"
+          role="tablist"
+          aria-label="Plan tabs"
+        >
           <button
             type="button"
             role="tab"
@@ -183,8 +215,13 @@ const MyPlan = () => {
           </button>
         </div>
 
+        {/* SORT */}
         <div className="flex items-center gap-3">
-          <label htmlFor="sortBy" className="text-sm font-bold text-zinc-400">
+
+          <label
+            htmlFor="sortBy"
+            className="text-sm font-bold text-zinc-400"
+          >
             Sort By
           </label>
 
@@ -192,30 +229,48 @@ const MyPlan = () => {
             id="sortBy"
             value={sortBy}
             onChange={(e) =>
-              setSortBy(e.target.value as "duration" | "calories" | "rating")
+              setSortBy(
+                e.target.value as
+                  | "duration"
+                  | "calories"
+                  | "rating",
+              )
             }
             className="rounded-lg border border-white/10 bg-[#111518] px-4 py-2 text-sm font-bold text-white outline-none transition focus:border-[#C2F800]"
           >
-            <option value="duration">Duration</option>
-            <option value="calories">Calories</option>
-            <option value="rating">Rating</option>
+            <option value="duration">
+              Duration
+            </option>
+
+            <option value="calories">
+              Calories
+            </option>
+
+            <option value="rating">
+              Rating
+            </option>
           </select>
+
         </div>
       </div>
 
       {/* WORKOUT SECTION */}
-
       <div className="mt-10">
+
         {isLoading ? (
-          // LOADING STATE
+
+          /* LOADING */
           <div className="flex min-h-60 flex-col items-center justify-center rounded-2xl border border-dashed border-white/15 px-6 py-12 text-center">
             <p className="text-sm font-bold uppercase tracking-wide text-zinc-400">
               Loading workouts…
             </p>
           </div>
+
         ) : currentList.length === 0 ? (
-          // EMPTY STATE
+
+          /* EMPTY STATE */
           <div className="flex min-h-60 flex-col items-center justify-center rounded-2xl border border-dashed border-white/15 px-6 py-12 text-center">
+
             <h3 className="text-xl font-black uppercase tracking-wide text-white">
               NOTHING HERE YET
             </h3>
@@ -230,22 +285,32 @@ const MyPlan = () => {
             >
               Go to workouts
             </Link>
+
           </div>
+
         ) : (
+
+          /* WORKOUT LIST */
           <div className="space-y-4">
+
             {sortedList.map((workout) => {
-              const isCompleted = completedIds.includes(workout.id);
+
+              const isCompleted =
+                completedIds.includes(workout.id);
 
               return (
                 <div
                   key={workout.id}
                   className={`rounded-2xl border bg-[#111518] p-5 transition ${
-                    isCompleted ? "border-[#C2F800]/40" : "border-white/10"
+                    isCompleted
+                      ? "border-[#C2F800]/40"
+                      : "border-white/10"
                   }`}
                 >
-                  <div className="flex flex-col gap-5 lg:flex-row lg:items-center">
-                    {/*  IMAGE */}
 
+                  <div className="flex flex-col gap-5 lg:flex-row lg:items-center">
+
+                    {/* IMAGE */}
                     <Image
                       src={workout.image}
                       alt={workout.name}
@@ -254,10 +319,11 @@ const MyPlan = () => {
                       className="h-32 w-full rounded-xl object-cover lg:h-24 lg:w-32"
                     />
 
-                    {/* INFO  */}
-
+                    {/* INFO */}
                     <div className="flex-1">
+
                       <div className="flex flex-wrap items-center gap-3">
+
                         <h3
                           className={`text-xl font-bold ${
                             isCompleted
@@ -273,6 +339,7 @@ const MyPlan = () => {
                             Completed
                           </span>
                         )}
+
                       </div>
 
                       <p className="mt-2 text-sm text-zinc-500">
@@ -280,25 +347,36 @@ const MyPlan = () => {
                       </p>
 
                       <div className="mt-3 flex flex-wrap gap-4 text-sm text-zinc-400">
-                        <span>{workout.duration} min</span>
 
-                        <span>{workout.caloriesBurned} kcal</span>
+                        <span>
+                          {workout.duration} min
+                        </span>
 
-                        <span>{workout.sets} sets</span>
+                        <span>
+                          {workout.caloriesBurned} kcal
+                        </span>
 
-                        <span>{workout.reps} reps</span>
+                        <span>
+                          {workout.sets} sets
+                        </span>
+
+                        <span>
+                          {workout.reps} reps
+                        </span>
 
                         {workout.rating !== undefined && (
-                          <span>⭐ {workout.rating}</span>
+                          <span>
+                            ⭐ {workout.rating}
+                          </span>
                         )}
+
                       </div>
                     </div>
 
-                    {/*  ACTIONS  */}
-
+                    {/* ACTIONS */}
                     <div className="flex flex-wrap gap-2">
-                      {/* VIEW DETAILS */}
 
+                      {/* VIEW DETAILS */}
                       <Link
                         href={`/workouts/${workout.id}`}
                         className="rounded-lg border border-white/10 px-4 py-2 text-xs font-bold text-white transition hover:bg-white/10"
@@ -306,31 +384,37 @@ const MyPlan = () => {
                         View Details
                       </Link>
 
-                      {/*  TODAY'S PLAN */}
-
+                      {/* TODAY'S PLAN */}
                       {activeTab === "plan" && (
                         <>
                           {/* MARK AS DONE */}
-
                           <button
                             type="button"
-                            onClick={() => handleMarkAsDone(workout.id)}
+                            onClick={() =>
+                              handleMarkAsDone(
+                                workout.id,
+                              )
+                            }
                             className={`rounded-lg px-4 py-2 text-xs font-bold transition ${
                               isCompleted
                                 ? "bg-zinc-700 text-zinc-300 hover:bg-zinc-600"
                                 : "bg-[#C2F800] text-black hover:bg-[#d4ff38]"
                             }`}
                           >
-                            {isCompleted ? "Mark as Undone" : "Mark as Done"}
+                            {isCompleted
+                              ? "Mark as Undone"
+                              : "Mark as Done"}
                           </button>
 
                           {/* REMOVE */}
-
                           <button
                             type="button"
                             aria-label={`Remove ${workout.name} from today's plan`}
                             onClick={() =>
-                              handleRemoveFromPlan(workout.id, workout.name)
+                              handleRemoveFromPlan(
+                                workout.id,
+                                workout.name,
+                              )
                             }
                             className="rounded-lg bg-red-500/10 px-4 py-2 text-xs font-bold text-red-400 transition hover:bg-red-500 hover:text-white"
                           >
@@ -340,24 +424,28 @@ const MyPlan = () => {
                       )}
 
                       {/* SAVED */}
-
                       {activeTab === "saved" && (
                         <button
                           type="button"
                           aria-label={`Remove ${workout.name} from saved`}
                           onClick={() =>
-                            handleRemoveFromSaved(workout.id, workout.name)
+                            handleRemoveFromSaved(
+                              workout.id,
+                              workout.name,
+                            )
                           }
                           className="rounded-lg bg-red-500/10 px-4 py-2 text-xs font-bold text-red-400 transition hover:bg-red-500 hover:text-white"
                         >
                           ❌
                         </button>
                       )}
+
                     </div>
                   </div>
                 </div>
               );
             })}
+
           </div>
         )}
       </div>

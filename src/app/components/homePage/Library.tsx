@@ -4,9 +4,7 @@ import { ILibrary } from "@/types/library.type";
 
 
 const getLibrary = async () => {
-  const res = await fetch(
-    "https://api.abcz.workers.dev/api/fitlog"
-  );
+  const res = await fetch("https://api.api-store.workers.dev/api/fitlog");
 
   if (!res.ok) {
     throw new Error("Failed to fetch library");

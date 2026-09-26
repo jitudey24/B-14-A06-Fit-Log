@@ -12,6 +12,7 @@ interface LibraryDetailsCardProps {
 const LibraryDetailsCard = ({
   library,
 }: LibraryDetailsCardProps) => {
+  console.log(library);
   return (
     <section className="mx-auto max-w-6xl px-4 py-10 bg-black">
 
