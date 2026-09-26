@@ -103,7 +103,7 @@ const MyPlan = () => {
     setCompletedIds((prev) =>
       prev.filter((item) => item !== id)
     );
-     toast.success("Workout removed from today's plan");
+     alert("Workout removed from today's plan");
   };
 
   // =========================
@@ -114,7 +114,7 @@ const MyPlan = () => {
     setSaved((prev) =>
       prev.filter((workout) => workout.id !== id)
     );
-     toast.success("Workout removed from saved");
+     alert("Workout removed from saved");
   };
 
   return (
