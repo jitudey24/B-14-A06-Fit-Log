@@ -23,7 +23,7 @@ const Library = async () => {
   return (
     <section className="mx-auto my-17.5 max-w-6xl px-4 bg-black">
 
-      {/* ================= HEADER ================= */}
+      {/* HEADER  */}
       <div className="mb-8">
         <h2 className="text-4xl font-black uppercase tracking-tight text-white">
           The Library
@@ -34,9 +34,9 @@ const Library = async () => {
         </p>
       </div>
 
-      {/* ================= CARDS ================= */}
+      {/* CARDS  */}
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-        {librarys.slice(0,6).map((library : ILibrary) => (
+        {librarys.map((library : ILibrary) => (
           <LibraryCard
             key={library.id}
             library={library}

@@ -23,7 +23,7 @@ const Library = async () => {
   return (
     <section className="mx-auto my-17.5 max-w-6xl px-4 bg-black">
 
-      {/* ================= HEADER ================= */}
+      {/*  HEADER */}
       <div className="mb-8">
         <h2 className="text-4xl font-black uppercase tracking-tight text-white">
           The Library

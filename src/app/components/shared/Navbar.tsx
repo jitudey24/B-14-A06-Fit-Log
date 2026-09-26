@@ -65,7 +65,7 @@ const Navbar = () => {
 
           <Image src={logo} alt="logo icon" />
 
-          <a className="btn btn-ghost text-xl text-white">FITLOG</a>
+          <a className="btn btn-ghost text-3xl font-black text-white">FITLOG</a>
         </div>
 
         <div className="navbar-center hidden lg:flex  ">
@@ -74,13 +74,25 @@ const Navbar = () => {
           </ul>
         </div>
 
-        <div className="navbar-end gap-2">
-          <Link href="/my-plan" className=" bg-black text-white ">
-            Plan ({plan.length})
+        <div className="navbar-end gap-4">
+          <Link
+            href="/my-plan"
+            className="flex items-center gap-2 text-white text-sm font-medium"
+          >
+            Plan
+            <span className="flex items-center justify-center w-5 h-5 rounded-full bg-[#C2F800] text-black text-xs font-bold">
+              {plan.length}
+            </span>
           </Link>
 
-          <Link href="/my-plan" className="bg-black text-white">
-            Saved ({saved.length})
+          <Link
+            href="/my-plan"
+            className="flex items-center gap-2 text-white text-sm font-medium"
+          >
+            Saved
+            <span className="flex items-center justify-center w-5 h-5 rounded-full border border-gray-500 text-white text-xs font-bold">
+              {saved.length}
+            </span>
           </Link>
         </div>
       </div>

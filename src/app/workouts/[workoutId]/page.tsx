@@ -3,7 +3,7 @@ import { ILibrary } from "@/types/library.type";
 
 interface LibraryDetailsPageProps {
   params: Promise<{
-    id: string;
+    workoutId: string;
   }>;
 }
 
@@ -14,11 +14,7 @@ const LibraryDetailsPage = async ({
 
   // Get all workouts from API
   const res = await fetch(
-    `https://api.abcz.workers.dev/api/fitlog`,
-    {
-      cache: "no-store",
-    }
-  );
+    `https://api.abcz.workers.dev/api/fitlog`);
 
   if (!res.ok) {
     throw new Error("Failed to fetch workouts");
