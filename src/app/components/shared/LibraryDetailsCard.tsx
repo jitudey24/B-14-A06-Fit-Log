@@ -17,7 +17,7 @@ const LibraryDetailsCard = ({
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
 
-        {/* ================= LEFT IMAGE ================= */}
+        {/* LEFT IMAGE  */}
         <div className="overflow-hidden rounded-xl">
           <Image
             src={library.image}
@@ -29,7 +29,7 @@ const LibraryDetailsCard = ({
           />
         </div>
 
-        {/* ================= RIGHT CONTENT ================= */}
+        {/*  RIGHT CONTENT  */}
         <div className="flex flex-col">
 
           {/* Title */}
@@ -54,7 +54,7 @@ const LibraryDetailsCard = ({
             ))}
           </div>
 
-          {/* ================= DETAILS BOX ================= */}
+          {/* DETAILS BOX */}
           <div className="mt-5 overflow-hidden rounded-xl border border-[#292c34] bg-[#17191f]">
 
             {/* Equipment */}
@@ -136,7 +136,7 @@ const LibraryDetailsCard = ({
 
           </div>
 
-          {/* ================= INSTRUCTIONS ================= */}
+          {/*  INSTRUCTIONS */}
           <div className="mt-5">
 
             <h2 className="text-xs font-black uppercase tracking-wider text-white">
@@ -160,7 +160,7 @@ const LibraryDetailsCard = ({
 
           </div>
 
-          {/* ================= BUTTONS ================= */}
+          {/*  BUTTONS  */}
           <div className="mt-6 flex flex-wrap gap-3">
 
            <AddPlanButton library={library}></AddPlanButton>

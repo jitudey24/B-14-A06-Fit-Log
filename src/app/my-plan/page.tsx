@@ -1,15 +1,26 @@
 "use client";
 
-import React, { useContext, useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { useContext, useEffect, useState } from "react";
 import { LibraryContext } from "@/context/LibraryContext";
 import Image from "next/image";
 import Link from "next/link";
 import { toast } from "react-toastify";
 
-const MyPlan = () => {
-  const router = useRouter();
+// ---- TYPES ----
 
+interface Workout {
+  id: number;
+  name: string;
+  image: string;
+  equipment: string;
+  duration: number;
+  caloriesBurned: number;
+  sets: number;
+  reps: number;
+  rating?: number;
+}
+
+const MyPlan = () => {
   const { plan, setPlan, saved, setSaved } = useContext(LibraryContext);
 
   const [activeTab, setActiveTab] = useState<"plan" | "saved">("plan");
@@ -17,19 +28,31 @@ const MyPlan = () => {
   // Completed workout IDs
   const [completedIds, setCompletedIds] = useState<number[]>([]);
 
+  // Loading state (initial fetch simulation)
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulates the initial data fetch before the list is ready to render.
+    // Replace with the real fetch/query if plan/saved come from an API.
+    const timer = setTimeout(() => setIsLoading(false), 500);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Sort By
   // Default = Duration
   const [sortBy, setSortBy] = useState<"duration" | "calories" | "rating">(
     "duration",
   );
 
-  // Current tab data
-  const currentList =
-    activeTab === "plan" ? plan.filter(Boolean) : saved.filter(Boolean);
+  // Clean lists (guard against null/undefined entries)
+  const cleanPlan: Workout[] = plan.filter(Boolean);
+  const cleanSaved: Workout[] = saved.filter(Boolean);
 
-  // =========================
+  // Current tab data
+  const currentList = activeTab === "plan" ? cleanPlan : cleanSaved;
+
   // SORT CURRENT LIST
-  // =========================
+
   const sortedList = [...currentList].sort((a, b) => {
     if (sortBy === "duration") {
       return Number(a.duration || 0) - Number(b.duration || 0);
@@ -46,28 +69,20 @@ const MyPlan = () => {
     return 0;
   });
 
-  // =========================
   // STATS
-  // Always based on TODAY'S PLAN
-  // =========================
+  // Always based on TODAY'S PLAN, updates live as items are added/removed
 
-  const totalExercises = plan.length;
+  const totalExercises = cleanPlan.length;
 
-  const totalMinutes = plan.reduce(
+  const totalMinutes = cleanPlan.reduce(
     (total, workout) => total + Number(workout?.duration || 0),
     0,
   );
 
-  const totalCalories = plan.reduce(
+  const totalCalories = cleanPlan.reduce(
     (total, workout) => total + Number(workout?.caloriesBurned || 0),
     0,
   );
-
-  // VIEW DETAILS
-
-  const handleViewDetails = (id: number) => {
-    router.push(`/workouts/${id}`);
-  };
 
   // MARK AS DONE / UNDONE
 
@@ -85,7 +100,10 @@ const MyPlan = () => {
 
   // REMOVE FROM TODAY'S PLAN
 
-  const handleRemoveFromPlan = (id: number) => {
+  const handleRemoveFromPlan = (id: number, name: string) => {
+    const confirmed = window.confirm(`Remove "${name}" from today's plan?`);
+    if (!confirmed) return;
+
     setPlan((prev) => prev.filter((workout) => workout.id !== id));
 
     // Remove completed status too
@@ -96,7 +114,10 @@ const MyPlan = () => {
 
   // REMOVE FROM SAVED
 
-  const handleRemoveFromSaved = (id: number) => {
+  const handleRemoveFromSaved = (id: number, name: string) => {
+    const confirmed = window.confirm(`Remove "${name}" from saved?`);
+    if (!confirmed) return;
+
     setSaved((prev) => prev.filter((workout) => workout.id !== id));
 
     toast.info("Workout removed from saved");
@@ -114,11 +135,13 @@ const MyPlan = () => {
         </p>
       </div>
 
-      {/*STATS */}
+      {/* STATS */}
 
       <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="rounded-2xl border border-white/10 bg-[#111518] p-6">
-          <p className="text-sm font-bold uppercase text-zinc-500">Exercises</p>
+          <p className="text-sm font-bold uppercase text-zinc-500">
+            Exercises
+          </p>
 
           <h2 className="mt-3 text-4xl font-black text-[#C2F800]">
             {totalExercises}
@@ -134,7 +157,9 @@ const MyPlan = () => {
         </div>
 
         <div className="rounded-2xl border border-white/10 bg-[#111518] p-6">
-          <p className="text-sm font-bold uppercase text-zinc-500">Calories</p>
+          <p className="text-sm font-bold uppercase text-zinc-500">
+            Calories
+          </p>
 
           <h2 className="mt-3 text-4xl font-black text-[#C2F800]">
             {totalCalories}
@@ -145,8 +170,11 @@ const MyPlan = () => {
       {/* TABS + SORT BY (same row) */}
 
       <div className="mt-10 flex flex-wrap items-center justify-between gap-4">
-        <div className="flex gap-3">
+        <div className="flex gap-3" role="tablist" aria-label="Plan tabs">
           <button
+            type="button"
+            role="tab"
+            aria-selected={activeTab === "plan"}
             onClick={() => setActiveTab("plan")}
             className={`rounded-lg px-6 py-3 text-sm font-bold transition ${
               activeTab === "plan"
@@ -158,6 +186,9 @@ const MyPlan = () => {
           </button>
 
           <button
+            type="button"
+            role="tab"
+            aria-selected={activeTab === "saved"}
             onClick={() => setActiveTab("saved")}
             className={`rounded-lg px-6 py-3 text-sm font-bold transition ${
               activeTab === "saved"
@@ -192,10 +223,16 @@ const MyPlan = () => {
       {/* WORKOUT SECTION */}
 
       <div className="mt-10">
-        {/* EMPTY STATE */}
-
-        {currentList.length === 0 ? (
-          <div className="flex min-h-[240px] flex-col items-center justify-center rounded-2xl border border-dashed border-white/15 px-6 py-12 text-center">
+        {isLoading ? (
+          // LOADING STATE
+          <div className="flex min-h-60 flex-col items-center justify-center rounded-2xl border border-dashed border-white/15 px-6 py-12 text-center">
+            <p className="text-sm font-bold uppercase tracking-wide text-zinc-400">
+              Loading workouts…
+            </p>
+          </div>
+        ) : currentList.length === 0 ? (
+          // EMPTY STATE
+          <div className="flex min-h-60 flex-col items-center justify-center rounded-2xl border border-dashed border-white/15 px-6 py-12 text-center">
             <h3 className="text-xl font-black uppercase tracking-wide text-white">
               NOTHING HERE YET
             </h3>
@@ -205,7 +242,7 @@ const MyPlan = () => {
             </p>
 
             <Link
-              href="/workouts"
+              href="/"
               className="mt-5 rounded-full bg-[#C2F800] px-6 py-3 text-sm font-bold text-black shadow-lg transition hover:bg-[#d4ff38]"
             >
               Go to workouts
@@ -308,7 +345,10 @@ const MyPlan = () => {
 
                           <button
                             type="button"
-                            onClick={() => handleRemoveFromPlan(workout.id)}
+                            aria-label={`Remove ${workout.name} from today's plan`}
+                            onClick={() =>
+                              handleRemoveFromPlan(workout.id, workout.name)
+                            }
                             className="rounded-lg bg-red-500/10 px-4 py-2 text-xs font-bold text-red-400 transition hover:bg-red-500 hover:text-white"
                           >
                             ❌
@@ -321,7 +361,10 @@ const MyPlan = () => {
                       {activeTab === "saved" && (
                         <button
                           type="button"
-                          onClick={() => handleRemoveFromSaved(workout.id)}
+                          aria-label={`Remove ${workout.name} from saved`}
+                          onClick={() =>
+                            handleRemoveFromSaved(workout.id, workout.name)
+                          }
                           className="rounded-lg bg-red-500/10 px-4 py-2 text-xs font-bold text-red-400 transition hover:bg-red-500 hover:text-white"
                         >
                           ❌

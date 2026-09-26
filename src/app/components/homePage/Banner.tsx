@@ -72,7 +72,7 @@ const Banner = () => {
             </button>
           </div>
 
-          {/* ================= RIGHT IMAGE ================= */}
+          {/* RIGHT IMAGE  */}
           <div className="relative flex h-75 items-center justify-center md:h-full">
 
             {/* Image glow */}

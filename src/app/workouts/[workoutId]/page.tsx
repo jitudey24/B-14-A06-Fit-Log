@@ -40,6 +40,7 @@ const LibraryDetailsPage = async ({
 
   // Send workout data to LibraryDetailsCard
   return <LibraryDetailsCard library={library} />;
+
 };
 
 export default LibraryDetailsPage;

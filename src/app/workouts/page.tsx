@@ -1,6 +1,7 @@
 import React from "react";
 import { ILibrary } from "@/types/library.type";
 import LibraryCard from "../components/shared/LibraryCard";
+import Banner from "../components/homePage/Banner";
 
 
 const getLibrary = async () => {
@@ -21,7 +22,9 @@ const Library = async () => {
   const librarys = await getLibrary();
 
   return (
-    <section className="mx-auto my-17.5 max-w-6xl px-4 bg-black">
+   <>
+   <Banner></Banner>
+     <section className="mx-auto my-17.5 max-w-6xl px-4 bg-black">
 
       {/*  HEADER */}
       <div className="mb-8">
@@ -45,6 +48,7 @@ const Library = async () => {
       </div>
 
     </section>
+   </>
   );
 };
 

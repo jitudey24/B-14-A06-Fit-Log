@@ -12,7 +12,7 @@ const LibraryCard = ({ library }: ILibraryCardPropd) => {
     <Link href={`/workouts/${library.id}`}>
         <article className="group overflow-hidden rounded-2xl border border-[#292c34] bg-[#17191f] transition-all duration-300 hover:-translate-y-1 hover:border-[#C2F800]/40 hover:shadow-[0_15px_35px_rgba(0,0,0,0.35)]">
 
-      {/* ================= IMAGE ================= */}
+      {/*  IMAGE  */}
       <div className="relative h-[205px] overflow-hidden">
         <Image
           src={library.image}
@@ -26,7 +26,7 @@ const LibraryCard = ({ library }: ILibraryCardPropd) => {
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
       </div>
 
-      {/* ================= CONTENT ================= */}
+      {/* CONTENT  */}
       <div className="px-5 pb-5 pt-5">
 
         {/* Muscle Groups */}
@@ -64,7 +64,7 @@ const LibraryCard = ({ library }: ILibraryCardPropd) => {
         {/* Divider */}
         <div className="my-4 h-px bg-[#292c34]" />
 
-        {/* ================= STATS ================= */}
+        {/*  STATS */}
         <div className="flex items-center gap-5 text-xs text-gray-400">
 
           {/* Duration */}

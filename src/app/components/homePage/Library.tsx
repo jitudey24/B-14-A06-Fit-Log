@@ -21,7 +21,9 @@ const Library = async () => {
   const librarys = await getLibrary();
 
   return (
-    <section className="mx-auto my-17.5 max-w-6xl px-4 bg-black">
+      <section
+    className="mx-auto my-17.5 max-w-6xl  px-4 bg-black">
+
 
       {/* HEADER  */}
       <div className="mb-8">
