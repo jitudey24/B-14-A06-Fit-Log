@@ -74,7 +74,46 @@ const MyPlan = () => {
   // VIEW DETAILS
   // =========================
 
-  
+  const handleViewDetails = (id: number) => {
+    router.push(`/workouts/${id}`);
+  };
+
+  // =========================
+  // MARK AS DONE / UNDONE
+  // =========================
+
+  const handleMarkAsDone = (id: number) => {
+    setCompletedIds((prev) => {
+      if (prev.includes(id)) {
+        return prev.filter((item) => item !== id);
+      }
+
+      return [...prev, id];
+    });
+  };
+
+  // REMOVE FROM TODAY'S PLAN
+
+  const handleRemoveFromPlan = (id: number) => {
+    setPlan((prev) =>
+      prev.filter((workout) => workout.id !== id)
+    );
+
+    // Remove completed status too
+    setCompletedIds((prev) =>
+      prev.filter((item) => item !== id)
+    );
+    toast.info("Workout removed from today's plan");
+  };
+
+  // REMOVE FROM SAVED
+
+  const handleRemoveFromSaved = (id: number) => {
+    setSaved((prev) =>
+      prev.filter((workout) => workout.id !== id)
+    );
+    toast.info("Workout removed from saved");
+  };
 
   return (
     <main className="container mx-auto max-w-6xl px-4 py-10">

@@ -6,23 +6,31 @@ import React, { useContext } from "react";
 import logo from "@/assets/logo.png";
 import Link from "next/link";
 import { LibraryContext } from "@/context/LibraryContext";
+import { usePathname } from "next/navigation";
 
-const links = (
+
+
+const Navbar = () => {
+    const pathname = usePathname()
+
+  const links = (
   <>
     <li>
-      <Link href="/workouts">Workouts</Link>
+      <Link
+      className={pathname === '/workouts' ? "text-[#C2F800]" : ""}
+       href="/workouts">Workouts</Link>
     </li>
     <li>
-      <Link href="/my-plan">My Plan</Link>
+      <Link
+       className={pathname === '/my-plan' ? "text-[#C2F800]" : ""}
+       href="/my-plan">My Plan</Link>
     </li>
   </>
 );
-
-const Navbar = () => {
   const { plan, saved } = useContext(LibraryContext);
 
   return (
-    <nav className="bg-base-100 shadow-sm">
+    <nav className="bg-black shadow-sm ">
       <div className="navbar max-w-6xl mx-auto">
         <div className="navbar-start">
           <div className="dropdown">
@@ -58,22 +66,22 @@ const Navbar = () => {
 
           <Image src={logo} alt="logo icon" />
 
-          <a className="btn btn-ghost text-xl">FITLOG</a>
+          <a className="btn btn-ghost text-xl text-white">FITLOG</a>
         </div>
 
-        <div className="navbar-center hidden lg:flex">
-          <ul className="menu menu-horizontal px-1">
+        <div className="navbar-center hidden lg:flex  ">
+          <ul className="menu menu-horizontal px-1 text-[15px] font-bold text-gray-400">
             {links}
           </ul>
         </div>
 
         <div className="navbar-end gap-2">
-          <Link href="/my-plan" className="btn">
-            Plan {plan.length}
+          <Link href="/my-plan" className=" bg-black text-white ">
+            Plan ({plan.length})
           </Link>
 
-          <Link href="/my-plan" className="btn">
-            Saved {saved.length}
+          <Link href="/my-plan" className="bg-black text-white">
+            Saved ({saved.length})
           </Link>
         </div>
       </div>
