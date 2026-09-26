@@ -1,11 +1,13 @@
 import LibraryDetailsCard from "@/app/components/shared/LibraryDetailsCard";
 import { ILibrary } from "@/types/library.type";
-
+import { notFound } from "next/navigation";
 interface LibraryDetailsPageProps {
   params: Promise<{
     workoutId: string;
   }>;
 }
+
+
 
 const LibraryDetailsPage = async ({
   params,
@@ -25,6 +27,13 @@ const LibraryDetailsPage = async ({
   const library = workouts.find(
     (workout) => String(workout.id) === String(workoutId)
   );
+  const workout = workouts.find(
+  (item) => item.id === Number(workoutId)
+);
+
+if (!workout) {
+  notFound();
+}
 
   // If workout doesn't exist
   if (!library) {

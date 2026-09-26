@@ -24,7 +24,7 @@ const Banner = () => {
         <div className="relative z-10 grid min-h-90 items-center gap-10 md:grid-cols-2">
 
           {/* LEFT CONTENT */}
-          <div className="max-w-xl">
+          <div className="max-w-xl mx-auto md:mx-0 flex flex-col items-center text-center md:items-start md:text-left">
             {/* Small Label */}
             <div className="mb-5 inline-flex items-center ">
            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#C2F800]">
