@@ -10,7 +10,7 @@ const Banner = () => {
           relative overflow-hidden
           min-h-105
           rounded-2xl
-          
+
           bg-[#15171D]
           px-6 py-10
           md:px-10 md:py-12
@@ -28,7 +28,7 @@ const Banner = () => {
             {/* Small Label */}
             <div className="mb-5 inline-flex items-center ">
            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#C2F800]">
-                Workout Library
+                Workout Library for the fit log app 
               </p>
             </div>
 
