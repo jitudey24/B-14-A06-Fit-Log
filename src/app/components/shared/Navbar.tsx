@@ -1,4 +1,3 @@
-
 "use client";
 
 import Image from "next/image";
@@ -8,25 +7,29 @@ import Link from "next/link";
 import { LibraryContext } from "@/context/LibraryContext";
 import { usePathname } from "next/navigation";
 
-
-
 const Navbar = () => {
-    const pathname = usePathname()
+  const pathname = usePathname();
 
   const links = (
-  <>
-    <li>
-      <Link
-      className={pathname === '/workouts' ? "text-[#C2F800]" : ""}
-       href="/workouts">Workouts</Link>
-    </li>
-    <li>
-      <Link
-       className={pathname === '/my-plan' ? "text-[#C2F800]" : ""}
-       href="/my-plan">My Plan</Link>
-    </li>
-  </>
-);
+    <>
+      <li>
+        <Link
+          className={pathname === "/workouts" ? "text-[#C2F800]" : ""}
+          href="/workouts"
+        >
+          Workouts
+        </Link>
+      </li>
+      <li>
+        <Link
+          className={pathname === "/my-plan" ? "text-[#C2F800]" : ""}
+          href="/my-plan"
+        >
+          My Plan
+        </Link>
+      </li>
+    </>
+  );
   const { plan, saved } = useContext(LibraryContext);
 
   return (
@@ -34,18 +37,14 @@ const Navbar = () => {
       <div className="navbar max-w-6xl mx-auto">
         <div className="navbar-start">
           <div className="dropdown">
-            <div
-              tabIndex={0}
-              role="button"
-              className="btn btn-ghost lg:hidden"
-            >
+            <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
               <svg
                 aria-label="Menu"
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5"
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke="currentColor"
+                stroke="white"
               >
                 <path
                   strokeLinecap="round"
@@ -90,4 +89,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
