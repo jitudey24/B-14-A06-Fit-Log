@@ -35,7 +35,7 @@ const AddPlanButton = ({ library }: { library: ILibrary }) => {
       className="rounded-lg bg-[#C2F800] px-5 py-3 text-[10px] font-black uppercase tracking-wide text-black transition hover:bg-[#d4ff38]"
       onClick={handleTodayPlan}
     >
-      Add to today's plan
+      Add to today's plan for my plan page
     </button>
   );
 };

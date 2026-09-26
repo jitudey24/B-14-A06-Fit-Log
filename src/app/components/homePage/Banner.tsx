@@ -28,7 +28,7 @@ const Banner = () => {
             {/* Small Label */}
             <div className="mb-5 inline-flex items-center ">
            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#C2F800]">
-                Workout Library for the fit log app 
+                Workout Library
               </p>
             </div>
 
