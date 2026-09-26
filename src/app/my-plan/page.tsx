@@ -6,20 +6,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { toast } from "react-toastify";
 
-// ---- TYPES ----
-
-interface Workout {
-  id: number;
-  name: string;
-  image: string;
-  equipment: string;
-  duration: number;
-  caloriesBurned: number;
-  sets: number;
-  reps: number;
-  rating?: number;
-}
-
 const MyPlan = () => {
   const { plan, setPlan, saved, setSaved } = useContext(LibraryContext);
 
@@ -32,8 +18,6 @@ const MyPlan = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Simulates the initial data fetch before the list is ready to render.
-    // Replace with the real fetch/query if plan/saved come from an API.
     const timer = setTimeout(() => setIsLoading(false), 500);
     return () => clearTimeout(timer);
   }, []);
@@ -44,9 +28,8 @@ const MyPlan = () => {
     "duration",
   );
 
-  // Clean lists (guard against null/undefined entries)
-  const cleanPlan: Workout[] = plan.filter(Boolean);
-  const cleanSaved: Workout[] = saved.filter(Boolean);
+  const cleanPlan = plan.filter(Boolean);
+  const cleanSaved = saved.filter(Boolean);
 
   // Current tab data
   const currentList = activeTab === "plan" ? cleanPlan : cleanSaved;
