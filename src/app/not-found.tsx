@@ -6,7 +6,6 @@ import React from "react";
 const NotFound = () => {
 return ( <main className="min-h-screen bg-[#0b0f10] px-4 py-16 text-white"> <div className="mx-auto flex min-h-[70vh] max-w-4xl items-center justify-center"> <div className="w-full rounded-3xl border border-white/10 bg-[#111518] px-6 py-12 text-center shadow-2xl sm:px-10 md:px-16">
 
-```
       {/* 404 */}
       <p className="text-sm font-bold uppercase tracking-[0.3em] text-[#C2F800]">
         FITLOG

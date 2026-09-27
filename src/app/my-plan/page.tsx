@@ -7,19 +7,23 @@ import Link from "next/link";
 import { toast } from "react-toastify";
 
 const MyPlan = () => {
-  const { plan, setPlan, saved, setSaved } = useContext(LibraryContext);
+  const {
+    plan,
+    setPlan,
+    saved,
+    setSaved,
+    completedIds,
+    setCompletedIds,
+  } = useContext(LibraryContext);
 
   const [activeTab, setActiveTab] = useState<"plan" | "saved">("plan");
-
-  // Completed workout IDs
-  const [completedIds, setCompletedIds] = useState<number[]>([]);
 
   // Loading state
   const [isLoading, setIsLoading] = useState(true);
 
-  // Default sorting = Duration
-  const [sortBy, setSortBy] = useState<
-    "duration" | "calories" | "rating"
+  // Default sorting = কোনো সর্ট হবে না (API যেভাবে দিয়েছে সেভাবেই)
+  const [sortBy, setSortBy] = useState <
+     "duration" | "calories" | "rating"
   >("duration");
 
   useEffect(() => {
@@ -40,6 +44,11 @@ const MyPlan = () => {
   // SORT
   const sortedList = useMemo(() => {
     const list = [...currentList];
+
+    // ডিফল্ট অবস্থায় কোনো সর্ট হবে না
+    // if (sortBy === "default") {
+    //   return list;
+    // }
 
     if (sortBy === "duration") {
       return list.sort(
@@ -68,16 +77,16 @@ const MyPlan = () => {
     return list;
   }, [currentList, sortBy]);
 
-  // STATS
-  const totalExercises = cleanPlan.length;
+  // STATS (activeTab অনুযায়ী dynamic — currentList ইউজ হচ্ছে)
+  const totalExercises = currentList.length;
 
-  const totalMinutes = cleanPlan.reduce(
+  const totalMinutes = currentList.reduce(
     (total, workout) =>
       total + Number(workout?.duration || 0),
     0,
   );
 
-  const totalCalories = cleanPlan.reduce(
+  const totalCalories = currentList.reduce(
     (total, workout) =>
       total + Number(workout?.caloriesBurned || 0),
     0,
@@ -454,4 +463,3 @@ const MyPlan = () => {
 };
 
 export default MyPlan;
-

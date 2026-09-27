@@ -27,7 +27,7 @@ const Banner = () => {
           <div className="max-w-xl mx-auto md:mx-0 flex flex-col items-center text-center md:items-start md:text-left">
             {/* Small Label */}
             <div className="mb-5 inline-flex items-center ">
-           <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#C2F800]">
+              <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#C2F800]">
                 Workout Library
               </p>
             </div>
@@ -43,7 +43,7 @@ const Banner = () => {
             >
               Train With Intent.Log
               <br />
-             Every Set.
+              Every Set.
             </h1>
 
             {/* Description */}
@@ -52,10 +52,12 @@ const Banner = () => {
               lock it into today's plan, and watch the week's work add up.
             </p>
 
-            {/* Button */}
-            <button
+            {/* Button (anchor → smooth scroll to #library) */}
+            <a
+              href="#library"
               className="
                 mt-7
+                inline-flex items-center gap-2
                 rounded-md
                 bg-[#C2F800]
                 px-6 py-3
@@ -68,8 +70,22 @@ const Banner = () => {
                 hover:shadow-[0_8px_25px_rgba(194,248,0,0.25)]
               "
             >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none" />
+              </svg>
               Browse Workouts
-            </button>
+            </a>
           </div>
 
           {/* RIGHT IMAGE  */}
